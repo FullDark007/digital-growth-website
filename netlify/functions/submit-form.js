@@ -7,11 +7,7 @@ exports.handler = async (event, context) => {
     };
 
     if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers,
-            body: ''
-        };
+        return { statusCode: 200, headers, body: '' };
     }
 
     if (event.httpMethod !== 'POST') {
@@ -36,15 +32,9 @@ exports.handler = async (event, context) => {
         const airtableData = {
             records: [{
                 fields: {
-                    'Name': data.name || '',
-                    'Email Address': data.email || '',
-                    'Phone Number': data.phone || '',
-                    'Company': data.company || '',
-                    'Message': data.message || '',
-                    'Date Submitted': new Date().toLocaleDateString('en-CA'),
-                    'Status': 'New',
-                    'Priority': 'Medium',
-                    'Lead Source': 'Website Form'
+                    'Name': data.name || 'Test Name',
+                    'Email Address': data.email || 'test@test.com',
+                    'Status': 'New'
                 }
             }]
         };
@@ -59,18 +49,26 @@ exports.handler = async (event, context) => {
         });
 
         if (response.ok) {
-    return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({ success: true })
-    };
-} else {
-    const errorData = await response.text();
-    console.error('Airtable detailed error:', errorData);
-    throw new Error(`Airtable API error: ${response.status} - ${errorData}`);
-}
+            return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({ success: true })
+            };
+        } else {
+            const errorData = await response.text();
+            console.error('Airtable detailed error:', errorData);
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({ 
+                    error: `Airtable API error: ${response.status}`,
+                    details: errorData
+                })
+            };
+        }
 
     } catch (error) {
+        console.error('Function error:', error);
         return {
             statusCode: 500,
             headers,
