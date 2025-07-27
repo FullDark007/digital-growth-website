@@ -59,15 +59,16 @@ exports.handler = async (event, context) => {
         });
 
         if (response.ok) {
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({ success: true })
-            };
-        } else {
-            const errorData = await response.text();
-            throw new Error(`Airtable API error: ${response.status}`);
-        }
+    return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true })
+    };
+} else {
+    const errorData = await response.text();
+    console.error('Airtable detailed error:', errorData);
+    throw new Error(`Airtable API error: ${response.status} - ${errorData}`);
+}
 
     } catch (error) {
         return {
