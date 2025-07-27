@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
         
         const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
         const BASE_ID = process.env.BASE_ID;
-        const TABLE_NAME = 'Leads';
+        const TABLE_NAME = 'Website Leads';
 
         if (!AIRTABLE_TOKEN || !BASE_ID) {
             throw new Error('Missing environment variables');
