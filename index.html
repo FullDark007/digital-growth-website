@@ -401,33 +401,72 @@
             observer.observe(el);
         });
 
-        // Form submission handling
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Add current date
-            data.dateSubmitted = new Date().toISOString();
-            data.status = 'New';
-            data.priority = 'Medium';
-            data.leadSource = 'Website Form';
-            
-            // Simulate form submission
-            console.log('Form data to be sent to Airtable:', data);
-            
-            // Show success message
+        // Airtable Configuration - REPLACE WITH YOUR VALUES
+const AIRTABLE_TOKEN = 'patWSgrtUAdDav7T4.65be6a4b90c17f02924f6155afcd914301fe23326f535a11d3d636a3ebf36980';  // Replace with your actual token
+const BASE_ID = 'appXcWQoIwZmjlhp7';       // Replace with your actual base ID
+const TABLE_NAME = 'Website Leads';                // Your table name
+
+// Form submission handling
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Show loading state
+    const submitButton = this.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
+    
+    try {
+        // Get form data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        // Prepare data for Airtable
+        const airtableData = {
+            records: [{
+                fields: {
+                    'Name': data.name || '',
+                    'Email Address': data.email || '',
+                    'Phone Number': data.phone || '',
+                    'Company': data.company || '',
+                    'Message': data.message || '',
+                    'Date Submitted': new Date().toISOString().split('T')[0],
+                    'Status': 'New',
+                    'Priority': 'Medium',
+                    'Lead Source': 'Website Form'
+                }
+            }]
+        };
+        
+        // Send to Airtable
+        const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(airtableData)
+        });
+        
+        if (response.ok) {
+            // Success!
             document.getElementById('form-success').classList.remove('hidden');
             document.getElementById('form-error').classList.add('hidden');
-            
-            // Reset form
             this.reset();
-            
-            // Note: In a real implementation, you would integrate with Airtable API here
-            // For now, this demonstrates the form structure and data collection
-        });
+        } else {
+            throw new Error('Failed to submit to Airtable');
+        }
+        
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        document.getElementById('form-error').classList.remove('hidden');
+        document.getElementById('form-success').classList.add('hidden');
+    } finally {
+        // Reset button
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+    }
+});
 
         // Add some initial fade-in animations
         setTimeout(() => {
