@@ -36,8 +36,7 @@ exports.handler = async (event, context) => {
     'Email Address': data.email || '',
     'Phone Number': data.phone || '',
     'Company': data.company || '',
-    'Message': data.message || '',
-    'Priority': 'Medium'
+    'Message': data.message ||  ''
 }
             }]
         };
