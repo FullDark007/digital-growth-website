@@ -41,7 +41,7 @@ exports.handler = async (event, context) => {
                     'Phone Number': data.phone || '',
                     'Company': data.company || '',
                     'Message': data.message || '',
-                    'Date Submitted': new Date().toISOString().split('T')[0],
+                    'Date Submitted': new Date().toLocaleDateString('en-CA'),
                     'Status': 'New',
                     'Priority': 'Medium',
                     'Lead Source': 'Website Form'
