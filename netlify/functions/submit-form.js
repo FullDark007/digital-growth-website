@@ -32,8 +32,14 @@ exports.handler = async (event, context) => {
         const airtableData = {
             records: [{
                 fields: {
-    'Name': data.name || 'Test Name',
-    'Email Address': data.email || 'test@test.com'
+    'Name': data.name || '',
+    'Email Address': data.email || '',
+    'Phone Number': data.phone || '',
+    'Company': data.company || '',
+    'Message': data.message || '',
+    'Date Submitted': new Date().toISOString().split('T')[0],
+    'Priority': 'Medium',
+    'Lead Source': 'Website Form'
 }
             }]
         };
