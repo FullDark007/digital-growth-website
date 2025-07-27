@@ -32,10 +32,9 @@ exports.handler = async (event, context) => {
         const airtableData = {
             records: [{
                 fields: {
-                    'Name': data.name || 'Test Name',
-                    'Email Address': data.email || 'test@test.com',
-                    'Status': 'New'
-                }
+    'Name': data.name || 'Test Name',
+    'Email Address': data.email || 'test@test.com'
+}
             }]
         };
 
